@@ -38,7 +38,7 @@ class AdminController extends Controller{
             return response()->json([
                 'status' => 200,
                 'token' => $token,
-                'user' => $user
+                'user' => session('user')
             ]);
         }
 

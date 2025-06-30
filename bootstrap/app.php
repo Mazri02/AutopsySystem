@@ -4,6 +4,11 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
+if (strpos($_SERVER['REQUEST_URI'], '/api/') === 0 && $_SERVER['REQUEST_URI'] !== '/api/api') {
+    $_SERVER['REQUEST_URI'] = str_replace('/api/', '/api/api/', $_SERVER['REQUEST_URI']);
+    $_SERVER['PATH_INFO'] = str_replace('/api/', '/api/api/', $_SERVER['PATH_INFO'] ?? '');
+}
+
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
