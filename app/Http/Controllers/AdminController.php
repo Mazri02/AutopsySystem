@@ -49,10 +49,32 @@ class AdminController extends Controller{
     }
 
     public function register(Request $req){
-        User::create([
-            'email' => $req->email,
-            'password' => hash('sha256',$req->pass),
+        // Validate the request
+        $req->validate([
+            'email' => 'required|email|unique:users,email',
+            'pass' => 'required|min:6'
         ]);
+
+        try {
+            // Create the user with name defaulting to email prefix
+            $name = explode('@', $req->email)[0]; // Use email prefix as name
+            
+            User::create([
+                'name' => $name,
+                'email' => $req->email,
+                'password' => hash('sha256', $req->pass),
+            ]);
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Akaun berjaya didaftar'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Ralat semasa mendaftar: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function getUser(Request $req){
@@ -149,5 +171,71 @@ class AdminController extends Controller{
         }
 
         return $status;
+    }
+
+    public function checkReportStatus($reportId)
+    {
+        // Try to find the report by ID
+        $report = TableForm::where('id', $reportId)->first();
+
+        if (!$report) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'ID laporan tidak dijumpai',
+                'found' => false
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Laporan dijumpai',
+            'found' => true,
+            'data' => [
+                'id' => $report->id,
+                'full_name' => $report->full_name,
+                'overall_status' => $report->overall_status,
+                'lab_status' => $report->lab_status,
+                'chemical_status' => $report->chemical_status,
+                'autopsy_status' => $report->autopsy_status,
+                'doctor_name' => $report->doctor_name,
+                'date_registered' => $report->date_registered,
+                'is_ready' => $report->overall_status === 'Completed'
+            ]
+        ]);
+    }
+
+    public function checkReportStatusByIC($icNumber)
+    {
+        // Try to find the report by IC number (check both ic_number and ic_number_applicant)
+        $report = TableForm::where('ic_number', $icNumber)
+                           ->orWhere('ic_number_applicant', $icNumber)
+                           ->first();
+
+        if (!$report) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Tiada laporan dijumpai untuk No. IC ini',
+                'found' => false
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Laporan dijumpai',
+            'found' => true,
+            'data' => [
+                'id' => $report->id,
+                'full_name' => $report->full_name,
+                'ic_number' => $report->ic_number,
+                'ic_number_applicant' => $report->ic_number_applicant,
+                'overall_status' => $report->overall_status,
+                'lab_status' => $report->lab_status,
+                'chemical_status' => $report->chemical_status,
+                'autopsy_status' => $report->autopsy_status,
+                'doctor_name' => $report->doctor_name,
+                'date_registered' => $report->date_registered,
+                'is_ready' => $report->overall_status === 'Completed'
+            ]
+        ]);
     }
 }

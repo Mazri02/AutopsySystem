@@ -5,6 +5,10 @@ use Inertia\Inertia;
 use App\Http\Middleware\CheckPermission;
 
 Route::get('/', function () {
+    return Inertia::render('index');
+})->name('index');
+
+Route::get('/login', function () {
     return Inertia::render('welcome');
 })->name('login');
 
