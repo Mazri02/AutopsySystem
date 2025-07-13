@@ -3,6 +3,7 @@ import axios from 'axios';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
+import { router } from '@inertiajs/react';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -12,7 +13,7 @@ axios.defaults.withCredentials = true;
 
 // Request interceptor to add the token
 axios.interceptors.request.use((config) => {
-  const token = sessionStorage.getItem('token');
+  const token = sessionStorage.getItem('auth_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -26,7 +27,8 @@ axios.interceptors.response.use(
   response => response,
   error => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('auth_token');
+      sessionStorage.removeItem('auth_token');
+      router.visit('/');
     }
     return Promise.reject(error);
   }

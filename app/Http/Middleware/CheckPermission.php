@@ -16,8 +16,7 @@ class CheckPermission
      */
     public function handle(Request $request, Closure $next): Response
     {
-        
-        if (!session('user')) {
+        if (!session()->has('user')) {
             return redirect()->route('login');
         }
 

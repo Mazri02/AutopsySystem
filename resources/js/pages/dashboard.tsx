@@ -2,7 +2,7 @@
   import axios from 'axios'
   import HospitalJasin from '../../img/logo.jpg'
   import Government from '../../img/gov.jpg'
-  import React, { useEffect, useState } from 'react'
+  import React, { use, useEffect, useState } from 'react'
   import {
     BsArrowLeft,
     BsArrowRight,
@@ -169,6 +169,7 @@ import { LoaderPinwheel } from 'lucide-react'
       applied_by: '',
       doctor_name: ''
     });
+    const [checkStatus, setCheckStatus] = useState(sessionStorage.getItem('auth_token') ?? "");
 
     const setFormField = (key: keyof FormData, value: string) => {
       setFormData(prev => ({ ...prev, [key]: value }));
@@ -477,7 +478,7 @@ import { LoaderPinwheel } from 'lucide-react'
             timerProgressBar: true
           })
 
-          sessionStorage.clear()
+          sessionStorage.clear();
           router.visit('/')
         }
       })
@@ -514,8 +515,9 @@ import { LoaderPinwheel } from 'lucide-react'
     })
 
     return (
-      <div className="p-2 h-[100vh] w-full bg-[#f0f0f0]">
-        <div className='overflow-auto flex justify-center flex-wrap flex-col my-2 p-6 rounded-xl w-[95%] mx-auto bg-white' style={{boxShadow:"0px 0px 10px 5px rgba(0,0,0,0.25)"}}>
+      (checkStatus && (
+        <div className="p-2 h-[100vh] w-full bg-[#f0f0f0]">
+        <div className='overflow-auto flex justify-center flex-wrap flex-col my-auto p-6 rounded-xl w-[95%] mx-auto bg-white' style={{boxShadow:"0px 0px 10px 5px rgba(0,0,0,0.25)"}}>
           <div className='mb-2 flex flex-wrap align-center justify-between'>
             <div className='flex gap-5'>
               <img src={HospitalJasin} className='w-[4em]'/>
@@ -575,5 +577,6 @@ import { LoaderPinwheel } from 'lucide-react'
           </table>
         </div>
       </div>
+      ))
     )
   }

@@ -88,7 +88,7 @@ class AdminController extends Controller{
             $tableForm = $tableForm->where('overall_status', $req->status);
         }
 
-        return $tableForm->paginate(9);
+        return $tableForm->paginate(15);
     }
 
     public function deleteUser($id){
@@ -173,9 +173,7 @@ class AdminController extends Controller{
         return $status;
     }
 
-    public function checkReportStatus($reportId)
-    {
-        // Try to find the report by ID
+    public function checkReportStatus($reportId){
         $report = TableForm::where('id', $reportId)->first();
 
         if (!$report) {

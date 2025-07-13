@@ -5,6 +5,7 @@ import Government from '../../img/gov.jpg';
 import Swal from 'sweetalert2';
 import { router } from '@inertiajs/react';
 import axios from 'axios';
+import { BsX } from 'react-icons/bs';
 
 export default function Index() {
   const [reportId, setReportId] = useState('');
@@ -66,7 +67,6 @@ export default function Index() {
 
       if (result.found) {
         const reportData = result.data;
-        
         if (reportData.is_ready) {
           Swal.fire({
             title: 'Laporan Siap!',
@@ -201,7 +201,7 @@ export default function Index() {
             timerProgressBar: true
           });
 
-          localStorage.setItem('token', res.data.token);
+          sessionStorage.setItem('auth_token', res.data.token);
           router.visit('/dashboard');
         } else {
           Swal.fire({
@@ -228,7 +228,7 @@ export default function Index() {
       {showAdminForm && (
         <>
         <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setShowAdminForm(false)}></div>
-        <div className="fixed inset-0 flex items-center justify-center z-50">
+        <div className="fixed inset-0 flex items-center justify-center z-50 w-[60%] h-fit m-auto">
           <div className="flex flex-col gap-4 items-center justify-center opacity-100 transition-opacity duration-750 p-5 rounded-xl shadow-md bg-white border max-w-md w-full">
             <div className="flex justify-between w-full">
               <h2 className="font-bold text-lg">Autopsy System - Hospital Jasin</h2>
@@ -236,7 +236,7 @@ export default function Index() {
                 onClick={() => setShowAdminForm(false)} 
                 className="text-gray-500 hover:text-gray-700"
               >
-                ✕
+                <BsX className='hover:cursor-pointer w-5 h-5'/>
               </button>
             </div>
             <input 
@@ -280,12 +280,12 @@ export default function Index() {
                 <img 
                   src={HospitalJasin} 
                   alt="Hospital Jasin" 
-                  className="w-14 h-14 object-contain"
+                  className="w-14 h-14 object-contain bg-white rounded-xl p-1"
                 />
                 <img 
                   src={Government} 
                   alt="Government" 
-                  className="w-14 h-14 object-contain"
+                  className="w-14 h-14 object-contain bg-white rounded-xl p-1"
                 />
               </div>
               <div>
@@ -366,7 +366,7 @@ export default function Index() {
         {/* Right side - Form Section (35%) */}
         <div className="w-[35%] bg-white relative">
           <div className="h-full flex items-center justify-center">
-            <div className="w-full max-w-sm px-8">
+            <div className="w-full max-w-sm px-8 my-8">
               <div className="space-y-8">
                 {/* Form Header */}
                 <div className="text-center space-y-3">
