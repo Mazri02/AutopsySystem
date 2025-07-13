@@ -16,7 +16,7 @@ export default function Welcome() {
         axios.post('/api/register',data).then((res) => {
             if(res.status == 200){
                 Swal.fire({
-                    text: 'Akaun Berjaya Didaftar',
+                    text: res.data.message || 'Akaun Berjaya Didaftar',
                     position: 'top-right',
                     icon: 'success',
                     toast: true,
@@ -24,7 +24,36 @@ export default function Welcome() {
                     timer: 10000,
                     timerProgressBar: true
                 })
+                setEmail('');
+                setPass('');
             }
+        }).catch((error) => {
+            let errorMessage = 'Ralat semasa mendaftar akaun';
+            
+            if (error.response) {
+                // Server responded with error status
+                if (error.response.status === 422) {
+                    // Validation errors
+                    const errors = error.response.data.errors;
+                    if (errors.email) {
+                        errorMessage = errors.email[0];
+                    } else if (errors.pass) {
+                        errorMessage = errors.pass[0];
+                    }
+                } else if (error.response.data.message) {
+                    errorMessage = error.response.data.message;
+                }
+            }
+            
+            Swal.fire({
+                text: errorMessage,
+                position: 'top-right',
+                icon: 'error',
+                toast: true,
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true
+            });
         })
     }
 

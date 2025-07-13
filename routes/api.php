@@ -6,6 +6,8 @@ use App\Http\Controllers\AdminController;
 
 Route::post('/login',[AdminController::class,'login']);
 Route::post('/register',[AdminController::class,'register']);
+Route::get('/checkReportStatus/{reportId}',[AdminController::class,'checkReportStatus']);
+Route::get('/checkReportStatusByIC/{icNumber}',[AdminController::class,'checkReportStatusByIC']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
